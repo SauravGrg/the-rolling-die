@@ -21,7 +21,28 @@ app.use(function(req, res, next) {
     next();
 })
 
-app.use("/catalog", require("./controllers/catalog"));
+app.use("/catalog", function(req, res, next) {
+    req.TPL.catalognav = true;
+    next();
+});
+
+app.use("/login", function(req, res, next) {
+    req.TPL.loginnav = true;
+    next();
+});
+
+app.use("/manager", function(req, res, next) {
+    req.TPL.managernav = true;
+    next();
+});
+
+app.use("/manager", function(req, res, next) {
+    if (req.session.username) {
+        next();
+    } else {
+        res.redirect("/login");
+    }
+});
 
 app.get("/", function(req, res) {
     res.redirect("/catalog");
