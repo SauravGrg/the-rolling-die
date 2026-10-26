@@ -1,0 +1,33 @@
+{{>header}}
+{{>navigation}}
+
+<div class="row">
+    <div class="card">
+        <h2>Available Board Games</h2>
+        <p>Browse our current in-store collection before heading in!</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Players</th>
+                    <th>Price</th>
+                    <th>Availability</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#games}}
+                    <tr>
+                        <td><strong>{{title}}</strong></td>
+                        <td>{{category}}</td>
+                        <td>{{players}}</td>
+                        <td>${{price}}</td>
+                        <td>{{stock}} in stock</td>
+                    </tr>
+                {{/games}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{>footer}}
