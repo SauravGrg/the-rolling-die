@@ -1,0 +1,63 @@
+{{> header}}
+{{> navigation}}
+
+<div class="row">
+    <div class="leftcolumn">
+        <div class="card">
+            <h2>Add New Game</h2>
+            <form action="/manager/create" method="post">
+                <input type="text" name="title" placeholder="Title" required>
+                <input type="text" name="category" placeholder="Category" required>
+                <input type="text" name="players" placeholder="Players (e.g. 1-4)" required>
+                <input type="number" step="0.01" name="price" placeholder="Price ($)" required>
+                <input type="number" name="stock" placeholder="Stock" required>
+                <input type="submit" value="Add Game">
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Manage Current Inventory</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Players</th>
+                        <th>Price ($)</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#games}}
+                    <tr>
+                        <form action="/manager/update/{{id}}" method="post">
+                            <td><input type="text" name="title" value="{{title}}" required></td>
+                            <td><input type="text" name="category" value="{{category}}" required></td>
+                            <td><input type="text" name="players" value="{{players}}" required></td>
+                            <td><input type="number" step="0.01" name="price" value="{{price}}" required></td>
+                            <td><input type="number" name="stock" value="{{stock}}" required></td>
+                            <td>
+                                <input type="submit" value="Update">
+                                <a href="/manager/delete/{{id}}" onclick="return confirm('Delete this game?');"> Delete</a>
+                            </td>
+                        </form>
+                    </tr>
+                    {{/games}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="rightclumn">
+        <div class="card">
+            <h2>Live Discord Bot Feed</h2>
+            <p><small>Live customer queries from Discord.</small></p>
+            <ul id="botmessages">
+                <li><em>Waiting for Discord activity...</em></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{{>footer}}
