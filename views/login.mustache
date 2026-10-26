@@ -1,0 +1,20 @@
+{{>header}}
+{{>navigation}}
+
+<div class="row">
+    <div class="card" style="max-width: 450px; margin: 20px auto;">
+        <h2>Staff Portal Login</h2>
+        {{#login_error}}
+            <p style="color: #b33939; font-weight: bold;">{{login_error}}</p>
+        {{/login_error}}
+        <form action="/login/attemptlogin" method="post">
+            <label><strong>Username:</strong></label><br>
+            <input type="text" name="username" style="width: 100%;" required><br><br>
+            <label><strong>Password:</strong></label><br>
+            <input type="password" name="password" style="width: 100%;" required><br><br>
+            <input type="submit" value="Log In">
+        </form>
+    </div>
+</div>
+
+{{>footer}}
