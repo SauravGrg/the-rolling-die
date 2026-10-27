@@ -44,6 +44,10 @@ app.use("/manager", function(req, res, next) {
     }
 });
 
+app.use("/catalog", require("./controllers/catalog"));
+app.use("/login", require("./controllers/login"));
+app.use("/manager", require("./controllers/manager"));
+
 app.get("/", function(req, res) {
     res.redirect("/catalog");
 })
