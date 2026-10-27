@@ -60,4 +60,23 @@
     </div>
 </div>
 
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    socket.on('botactivity', function(activity) {
+        const messages = document.getElementById('botmessages');
+
+        const item = document.createElement('li');
+        item.textContent = `${activity.user} used ${activity.command}: ${activity.reply}`;
+
+        messages.innerHTML = '';
+        messages.appendChild(item);
+    });
+</script>
+
+{{>footer}}
+
+
 {{>footer}}
