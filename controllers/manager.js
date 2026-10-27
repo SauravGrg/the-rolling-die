@@ -31,7 +31,7 @@ router.post("/update/:id", async function (req, res) {
     res.redirect("/manager")
 });
 
-router.get("/delete/:id", async function (reeq, res) {
+router.get("/delete/:id", async function (req, res) {
     await GamesModel.deleteGame(req.params.id);
     res.redirect("/manager");  
 })
