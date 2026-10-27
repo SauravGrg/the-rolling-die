@@ -9,7 +9,7 @@ const io = require('socket.io')(http);
 
 const session = require("express-session");
 const mustacheExpress = require("mustache-express");
-const { Client, Collection, GateWayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
 
 app.engine("mustache", mustacheExpress());
 app.set("view engine", "mustache");
@@ -64,11 +64,11 @@ app.get(/^(.+)$/, function(req, res) {
     res.sendFile(__dirname + req.params[0]);
 });
 
-const Client = new Client({ intents: [GateWayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
 
-const commandPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.js'));
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file);
@@ -78,7 +78,7 @@ for (const file of commandFiles) {
     }
 }
 
-client.once('ready', function() {
+client.once('clientReady', function() {
     console.log(`Discord Bot logged in as ${client.user.tag}`);
 });
 
@@ -99,5 +99,5 @@ client.on('interactionCreate', async function(interaction) {
 client.login(process.env.DISCORD_TOKEN);
 
 http.listen(3000, function() {
-    console.log("Server and WebSockets listending on http://localhost:300");
+    console.log("Server and WebSockets listending on http://localhost:3000");
 });

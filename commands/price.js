@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, time } = require('discord.js')
 const GamesModel = require('../models/games.js');
-const { data, execute } = require('./stock.js');
 
 module.exports = {
     data: new SlashCommandBuilder()

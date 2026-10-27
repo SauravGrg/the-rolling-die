@@ -1,6 +1,5 @@
-const { SlashCommandBuilder, time } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const GamesModel = require('../models/games.js');
-const { data, execute } = require('./stock.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,13 +13,14 @@ module.exports = {
             option.setName('maxprice')
                 .setDescription('Maximum price budget')
                 .setRequired(true)),
+
         async execute(interaction, io) {
             const category = interaction.options.getString('category');
-            const maxprice = interaction.option.getNumber('maxprice');
+            const maxprice = interaction.options.getNumber('maxprice');
             const games = await GamesModel.filterGames(category, maxprice);
 
             let replyText = '';
-            if (games.length === 0) {
+            if (!games || games.length === 0) {
                 replyText = `No ${category} games found under $${maxprice}.`;
             } else {
                 const list = games.map(g => `${g.title} ($${g.price.toFixed(2)}, ${g.stock} in stock)`).join(' | ');
