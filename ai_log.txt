@@ -1,0 +1,56 @@
+Project #1: The Rolling Die - AI Log
+AI Tool Used: Gemini
+
+How I Used AI
+Throughout this project, I used AI as an interactive learning guide and debugging collaborator. Rather than asking for a complete project dump, I broke the requirements down into small milestones. I used AI to understand the MVC architecture, ask conceptual questions, and review errors when things broke. For every piece of guidance received, I manually created or edited the files, tested the functionality in the terminal and browser, and debugged errors that came up during live testing.
+
+1. Setting Up Project Skeleton & Dependencies
+Prompt: Asked how to structure the project folders (controllers, models, views, commands) and how to set up package.json and .gitignore for an Express/SQLite/Discord.js project.
+What I did afterward: Created the directory layout and installed the dependencies. Created .gitignore to exclude node_modules and .env so sensitive tokens would not be committed to Git. Initialized Git and made the first commit.
+
+2. Understanding Course-Specific MVC & req.TPL
+Prompt: Asked how the Model-View-Controller pattern connects in Express using our class conventions, specifically asking why and how `req.TPL` is used as a shared template object across middlewares instead of passing random inline objects to res.render().
+What I did afterward: Set up global middleware in app.js to initialize `req.TPL = {}` on every request, automatically setting `displaylogin` and `displaylogout` based on session state, and adding route middleware for active navigation highlighting (`curnav`).
+
+3. SQLite Database Initialization & Models
+Prompt: Asked how to structure `initdb.js` using `sqlite3.verbose()` and `db.serialize()` matching lecture slides, and how to write asynchronous model queries using the `sqlite` wrapper.
+What I did afterward: Created `initdb.js` with seed data for games and users. Created `models/games.js` and `models/users.js` using `async/await` queries (`getAllGames`, `findGameByTitle`, `filterGames`, `createGame`, `updateGame`, `deleteGame`, `checkUser`). Tested by running `node initdb.js` to verify `database.db` was generated.
+
+4. Layout Partials & Public Catalog
+Prompt: Asked how to organize Mustache partials (`header.mustache`, `navigation.mustache`, `footer.mustache`) and build `controllers/catalog.js` and `views/catalog.mustache`.
+What I did afterward: Built the views and controller. When testing, the app crashed with `TypeError: Cannot set properties of undefined (setting 'games')`. I reviewed `controllers/catalog.js` and caught that I had mistakenly written `res.TPL.games` instead of `req.TPL.games`. Fixed it to `req.TPL`, verified the games rendered in a table, and committed the changes.
+
+5. Debugging CSS & Static Asset Routing
+Prompt: Encountered `ENOENT: no such file or directory, stat '.../style.css'` in the terminal from the regex catch-all route `app.get(/^(.+)$/, ...)` and asked why the stylesheet was not loading.
+What I did afterward: Checked the project directory and discovered `style.css` had accidentally been placed inside the `models/` folder. Moved `style.css` to the project root directory alongside `app.js`. Refreshed `http://localhost:3000/catalog` and confirmed the 2-column W3Schools layout and `curnav` navigation highlighting loaded properly.
+
+6. Staff Authentication & Session Middleware
+Prompt: Asked how to implement session-based authentication in `controllers/login.js` and protect routes using middleware, based on our class sessions lecture.
+What I did afterward: Built `views/login.mustache` and `controllers/login.js`. Added route-level gatekeeping middleware on `/manager` in `app.js` to redirect unauthenticated visitors to `/login`. Tested logging in with wrong credentials to verify the error message displayed, and logged in as `priya` / `password123` to confirm redirection to `/manager`.
+
+7. Manager Inventory CRUD Operations
+Prompt: Asked how to implement Add, Update, and Delete actions in `controllers/manager.js` and `views/manager.mustache` so inventory updates immediately persist to SQLite.
+What I did afterward: Structured `views/manager.mustache` with an "Add Game" form and inline table forms with "Update" and "Delete" actions. Tested adding *Ticket to Ride*, updating stock counts, and deleting records. Checked `/catalog` and ran SQLite queries to verify no stale data was cached in memory.
+
+8. Discord Slash Commands Structure
+Prompt: Asked how to structure modular slash commands using `SlashCommandBuilder` in a `/commands` folder (`stock.js`, `price.js`, `recommend.js`) matching the command structure from class.
+What I did afterward: Created individual command files in `commands/`. Wrote `deploy-commands.js` to dynamically load the commands and register them with the Discord REST API. Ran `node deploy-commands.js` and confirmed Discord registered all three commands.
+
+9. Debugging the /recommend Command Crash
+Prompt: When testing `/recommend` in Discord, the bot replied with *"There was an error executing this command!"*, and Discord showed options for `players, max_price`. Asked for help debugging why the command failed.
+What I did afterward: Inspected `commands/recommend.js` and identified two bugs:
+1. Removed an unused leftover import line: `const { data, execute } = require('./stock.js');`.
+2. Caught a critical syntax typo: `interaction.option.getNumber('maxprice')` (singular `option`). Because it was missing the 's', calling `.getNumber()` on `undefined` threw a TypeError. Fixed it to `interaction.options.getNumber('maxprice')`.
+Re-ran `deploy-commands.js` and restarted the server. Re-tested `/recommend category:Strategy maxprice:70` in Discord and confirmed the bot replied with matching games.
+
+10. Real-Time WebSockets Feed (Socket.IO)
+Prompt: Asked how to pass the `io` instance into `command.execute(interaction, io)` so each Discord command broadcasts a real-time event, and how to render incoming events in `manager.mustache`.
+What I did afterward: In `app.js`, wrapped the Express app with `http.Server(app)` and bound Socket.IO. Passed `io` into `command.execute()`. Added client-side Socket.IO listener code in `views/manager.mustache` that prepends new `<li>` elements to `#botmessages`. Tested side-by-side with Discord; confirmed that running `/stock` or `/price` instantly added an entry to the manager dashboard without refreshing the page.
+
+11. README & Documentation
+Prompt: Asked for feedback on drafting a clear `README.md` covering prerequisites, setup commands, environment variables, and default manager credentials.
+What I did afterward: Refined the `README.md` to ensure instructions were straightforward and verified that Markdown code blocks and headers formatted cleanly.
+
+12. Version Control & Git Commits
+Prompt: Asked for suggestions on descriptive, conventional commit messages for each milestone.
+What I did afterward: Committed changes incrementally after verifying each feature worked (setup, models, catalog, manager CRUD, Discord commands, WebSockets, and documentation), ensuring a clear commit history was maintained inside `.git`.

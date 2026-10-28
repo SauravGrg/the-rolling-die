@@ -16,7 +16,7 @@ router.post("/create", async function (req, res) {
         req.body.price,
         req.body.stock
     );
-    res.redirect("/manger");
+    res.redirect("/manager");
 });
 
 router.post("/update/:id", async function (req, res) {
